@@ -1,16 +1,36 @@
-import { Button } from "@/components/ui/button";
+import Navbar from "./components/landing/Navbar";
+import Hero from "./components/landing/Hero";
 
 const App = () => {
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 text-slate-900 font-sans p-6 text-center">
-            <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">🚀 Rsbuild + React + Express Template</h1>
-            <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">A modern, high-performance full-stack template featuring React 19, Express 5, and build performance powered by Rsbuild.</p>
-            <div className="flex gap-4">
-                <Button className="font-semibold px-6 cursor-pointer">Explore Features</Button>
-                <a href="https://github.com/ozan-fn/rsbuild-react-express-template" className="inline-flex items-center justify-center px-6 py-2 rounded-md font-medium bg-white border border-slate-200 shadow-xs hover:bg-slate-50 transition-colors">
-                    GitHub Repo
-                </a>
-            </div>
+        // The main wrapper for the entire page
+        <div className="min-h-screen bg-white">
+            
+            {/* 1. Our Sticky Navigation Bar */}
+            <Navbar />
+
+            {/* Main content area */}
+            <main>
+                {/* 2. The Hero Section (First Impression) */}
+                <Hero />
+                
+                {/* 3. The Search Feature Section */}
+                <section className="bg-white py-20 border-t border-slate-100">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        
+                        <div className="text-center mb-12">
+                            <h2 className="text-3xl font-bold text-slate-900 mb-4">
+                                Telusuri Database Obat
+                            </h2>
+                            <p className="text-slate-600 max-w-2xl mx-auto">
+                                Cari berdasarkan nama obat, merek dagang, atau indikasi untuk menemukan informasi yang paling relevan.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                
+                {/* Note: You will add <Features />, <HowItWorks />, and <Footer /> here later! */}
+            </main>
         </div>
     );
 };
