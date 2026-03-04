@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import LogoSVG from "@/assets/images/SobatObat_full.svg";
 
 const Navbar = () => {
@@ -27,28 +28,31 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px8">
         <div className="flex justify-between items-center">
-          <div className="flex-shrink-0 flex items-center cursor-pointer">
+          <Link
+            to="/"
+            className="flex-shrink-0 flex items-center cursor-pointer"
+          >
             <img src={LogoSVG} alt="Sobat Obat Logo" className="h-14 w-auto" />
-          </div>
+          </Link>
           <nav className="hidden md:flex space-x-8">
-            <a
-              href="#"
+            <Link
+              to="/kotak-obat"
               className="text-slate-600 hover:text-blue-600 font-medium transition-colors"
             >
               Kotak Obat
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/edukasi"
               className="text-slate-600 hover:text-blue-600 font-medium transition-colors"
             >
               Edukasi
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/riwayat"
               className="text-slate-600 hover:text-blue-600 font-medium transition-colors"
             >
               Riwayat
-            </a>
+            </Link>
             <a
               href="#"
               className="text-slate-600 hover:text-blue-600 font-medium transition-colors"

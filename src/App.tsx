@@ -1,20 +1,19 @@
-import Navbar from "./components/landing/Navbar";
-import Hero from "./components/landing/Hero";
-import HowItWorks from "./components/landing/HowItWorks";
-import Feature from "./components/landing/Features";
-import Footer from "./components/landing/Footer";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LandingPage from "./pages/LandingPage";
+import KotakObat from "./pages/KotakObat";
+import Edukasi from "./pages/Edukasi";
+import Riwayat from "./pages/Riwayat";
 
 const App = () => {
     return (
-        <div className="min-h-screen bg-white">
-            <Navbar />
-            <main>
-                <Hero />
-                <HowItWorks />
-                <Feature />
-            </main>
-            <Footer />
-        </div>
+        <Router>
+            <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/kotak-obat" element={<KotakObat />} />
+                <Route path="/edukasi" element={<Edukasi />} />
+                <Route path="/riwayat" element={<Riwayat />} />
+            </Routes>
+        </Router>
     );
 };
 
