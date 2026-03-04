@@ -35,19 +35,19 @@ const Navbar = () => {
               href="#"
               className="text-slate-600 hover:text-blue-600 font-medium transition-colors"
             >
-              Fitur
+              Kotak Obat
             </a>
             <a
               href="#"
               className="text-slate-600 hover:text-blue-600 font-medium transition-colors"
             >
-              Blog & Tips
+              Edukasi
             </a>
             <a
               href="#"
               className="text-slate-600 hover:text-blue-600 font-medium transition-colors"
             >
-              Harga
+              Riwayat
             </a>
             <a
               href="#"

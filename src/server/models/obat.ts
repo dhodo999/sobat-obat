@@ -1,6 +1,7 @@
 import { Document, model, Schema } from "mongoose";
 
-export interface IObat extends Document {
+export interface IObat extends Document<string> {
+  _id: string;
   nama_obat: string;
   deskripsi_obat: string;
   peringatan_sebelum_mengonsumsi_obat: string;
