@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SearchObat from "../ui/searchObat";
+import ScanObat from "../ui/scanObat";
 import Consultant from "./Consultant";
 import type { IObat } from "../../server/models/obat";
 
@@ -15,6 +16,9 @@ const HowItWorks = () => {
   // NEW STATE: AI Loading & Results
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [aiResult, setAiResult] = useState<string | null>(null);
+
+  // NEW STATE: Image Capturer
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
 
   const handleSelectMed = (med: IObat) => {
     // Prevent adding duplicates
@@ -108,19 +112,35 @@ const HowItWorks = () => {
             )}
 
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col max-h-[600px] w-full">
-              <div className="flex mb-4 border-b border-slate-100 pb-4 shrink-0">
-                <button
-                  onClick={() => setActiveTab("text")}
-                  className={`pb-2 px-4 text-sm font-bold transition-colors ${activeTab === "text" ? "text-blue-600 border-b-2 border-blue-600" : "text-slate-400 hover:text-slate-600"}`}
-                >
-                  Cari Obat
-                </button>
-                <button
-                  onClick={() => setActiveTab("image")}
-                  className={`pb-2 px-4 text-sm font-bold transition-colors ${activeTab === "image" ? "text-blue-600 border-b-2 border-blue-600" : "text-slate-400 hover:text-slate-600"}`}
-                >
-                  Scan Foto
-                </button>
+              <div className="flex justify-center mb-6 shrink-0 relative z-10">
+                <div className="bg-slate-100 p-1.5 rounded-full inline-flex shadow-inner">
+                  <button
+                    onClick={() => setActiveTab("text")}
+                    className={`relative px-6 py-2.5 text-sm font-bold rounded-full transition-all duration-300 ${
+                      activeTab === "text"
+                        ? "text-blue-700 bg-white shadow-sm"
+                        : "text-slate-500 hover:text-slate-700"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                      Cari Obat
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("image")}
+                    className={`relative px-6 py-2.5 text-sm font-bold rounded-full transition-all duration-300 ${
+                      activeTab === "image"
+                        ? "text-blue-700 bg-white shadow-sm"
+                        : "text-slate-500 hover:text-slate-700"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /></svg>
+                      Scan Foto
+                    </div>
+                  </button>
+                </div>
               </div>
 
               <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 min-h-0">
@@ -130,25 +150,44 @@ const HowItWorks = () => {
                   </div>
                 )}
                 {activeTab === "image" && (
-                  <div className="animate-in fade-in duration-300 bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:bg-slate-100 hover:border-blue-400 cursor-pointer transition-colors group mt-4">
-                    <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                  <div className="animate-in fade-in duration-300 mt-4 min-h-[300px]">
+                    {capturedImage ? (
+                      <div className="bg-slate-50 rounded-xl p-4 text-center border border-slate-200">
+                        <img
+                          src={capturedImage}
+                          alt="Hasil Scan"
+                          className="w-full max-h-64 object-contain rounded-lg mb-4 shadow-sm"
                         />
-                      </svg>
-                    </div>
-                    <h4 className="font-bold text-slate-800 text-sm">
-                      Unggah Label Obat
-                    </h4>
+                        <div className="flex gap-3">
+                          <button
+                            onClick={() => setCapturedImage(null)}
+                            className="flex-1 py-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-xl transition-colors shadow-sm"
+                          >
+                            Ulangi
+                          </button>
+                          <button className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2">
+                            <svg
+                              className="w-5 h-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"
+                              />
+                            </svg>
+                            Analisis AI
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <ScanObat
+                        onImageCapture={(img) => setCapturedImage(img)}
+                      />
+                    )}
                   </div>
                 )}
               </div>
