@@ -53,12 +53,12 @@ const Navbar = () => {
             >
               Riwayat
             </Link>
-            <a
-              href="#"
+            <Link
+              to="/tentang-kami"
               className="text-slate-600 hover:text-blue-600 font-medium transition-colors"
             >
               Tentang Kami
-            </a>
+            </Link>
           </nav>
           <div className="flex items-center space-x-4">
             <div className="hidden md:flex items-center space-x-1 text-slate-600 font-medium cursor-pointer hover:text-slate-900">
@@ -78,9 +78,12 @@ const Navbar = () => {
                 ></path>
               </svg>
             </div>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm shadow-blue-600/20">
+            <Link
+              to="/login"
+              className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm shadow-blue-600/20"
+            >
               Masuk
-            </button>
+            </Link>
             <div className="md:hidden flex items-center">
               <button className="text-slate-600 hover:text-slate-900 focus:outline-none">
                 <svg
