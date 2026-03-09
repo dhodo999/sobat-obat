@@ -86,7 +86,7 @@ const Hero = () => {
                     <img
                       src={AssetSVG}
                       alt="Asset 1"
-                      className="absolute inset-0 w-full h-full object-cover object-top"
+                      className="absolute inset-0 w-full h-full object-cover object-top scale-[1.01]"
                     />
                   </div>
                 </div>
@@ -94,7 +94,7 @@ const Hero = () => {
 
               {/* Secondary Floating UI element overlapping */}
               <div
-                className="absolute -bottom-14 -left-8 bg-white rounded-xl shadow-xl shadow-slate-200/50 border border-slate-100 p-4 flex items-center gap-4 animate-bounce"
+                className="absolute -bottom-14 -left-2 bg-white rounded-xl shadow-xl shadow-slate-200/50 border border-slate-100 p-4 flex items-center gap-4 animate-bounce"
                 style={{ animationDuration: "3s" }}
               >
                 <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
