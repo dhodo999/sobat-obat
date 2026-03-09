@@ -3,6 +3,7 @@ import Navbar from "../components/landing/Navbar";
 import Hero from "../components/content/Hero";
 import HowItWorks from "../components/content/HowItWorks";
 import Feature from "../components/content/Features";
+import FAQ from "../components/content/FAQ";
 import Footer from "../components/landing/Footer";
 
 const LandingPage = () => {
@@ -19,6 +20,7 @@ const LandingPage = () => {
         <Hero />
         <HowItWorks />
         <Feature />
+        <FAQ />
       </main>
       <Footer />
     </motion.div>

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import LogoSVG from "@/assets/images/SobatObat_full.svg";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 
 const Navbar = () => {
   const [isScrolled, SetIsScrolled] = useState(false);
@@ -64,28 +65,16 @@ const Navbar = () => {
             </Link>
           </nav>
           <div className="flex items-center space-x-4">
-            <div className="hidden md:flex items-center space-x-1 text-slate-600 font-medium cursor-pointer hover:text-slate-900">
-              <span>ID</span>
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M19 9l-7 7-7-7"
-                ></path>
-              </svg>
+            <div className="hidden md:flex items-center space-x-3 text-slate-600 font-bold hover:text-slate-900 mx-2">
+              <span className="text-sm">ID</span>
+              <Switch id="language-toggle-desktop" />
+              <span className="text-sm">EN</span>
             </div>
             <Button
               asChild
               className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-600/20 rounded-lg"
             >
-              <Link to="/login">Masuk</Link>
+              <Link to="/auth">Masuk</Link>
             </Button>
             <div className="md:hidden flex items-center">
               <button
@@ -251,39 +240,16 @@ const Navbar = () => {
                   />
                 </svg>
               </Link>
-              {/* Language/Region Dropdown Button Mockup */}
-              <div className="mt-10">
-                <button className="w-full flex items-center justify-between px-5 py-4 border border-slate-200 rounded-2xl text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors shadow-sm">
-                  <div className="flex items-center gap-3">
-                    <svg
-                      className="w-5 h-5 text-slate-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
-                      />
-                    </svg>
-                    ID
-                  </div>
-                  <svg
-                    className="w-4 h-4 text-slate-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
+              {/* Language Switch */}
+              <div className="mt-10 flex items-center justify-between px-5 py-4 border border-slate-200 rounded-2xl bg-white shadow-sm">
+                <span className="text-slate-700 text-sm font-bold">
+                  Pilihan Bahasa
+                </span>
+                <div className="flex items-center space-x-3 font-bold text-slate-600">
+                  <span className="text-sm">ID</span>
+                  <Switch id="language-toggle-mobile" />
+                  <span className="text-sm">EN</span>
+                </div>
               </div>
             </div>
           </motion.div>
