@@ -1,5 +1,6 @@
 import Consultant from "./Consultant";
 import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
 
 const HowItWorks = () => {
   return (
@@ -23,44 +24,50 @@ const HowItWorks = () => {
 
           {/* Tutorial / Steps Section (Horizontal Layout for better readability) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-4 w-full">
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center relative">
-              <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-6">
-                1
-              </div>
-              <h3 className="text-xl font-bold text-slate-800 mb-3">
-                Pilih Obat Anda
-              </h3>
-              <p className="text-slate-500">
-                Gunakan fitur pencarian teks atau scan botol fisik obat yang
-                akan Anda konsumsi.
-              </p>
-            </div>
+            <Card className="rounded-2xl shadow-sm border border-slate-100 text-center relative overflow-hidden">
+              <CardContent className="p-8">
+                <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-6">
+                  1
+                </div>
+                <h3 className="text-xl font-bold text-slate-800 mb-3">
+                  Pilih Obat Anda
+                </h3>
+                <p className="text-slate-500">
+                  Gunakan fitur pencarian teks atau scan botol fisik obat yang
+                  akan Anda konsumsi.
+                </p>
+              </CardContent>
+            </Card>
 
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center relative">
-              <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-6">
-                2
-              </div>
-              <h3 className="text-xl font-bold text-slate-800 mb-3">
-                Ceritakan Kondisi
-              </h3>
-              <p className="text-slate-500">
-                Tulis aktivitas atau apa yang akan Anda makan/minum bersama obat
-                tersebut.
-              </p>
-            </div>
+            <Card className="rounded-2xl shadow-sm border border-slate-100 text-center relative overflow-hidden">
+              <CardContent className="p-8">
+                <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-6">
+                  2
+                </div>
+                <h3 className="text-xl font-bold text-slate-800 mb-3">
+                  Ceritakan Kondisi
+                </h3>
+                <p className="text-slate-500">
+                  Tulis aktivitas atau apa yang akan Anda makan/minum bersama
+                  obat tersebut.
+                </p>
+              </CardContent>
+            </Card>
 
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 text-center relative">
-              <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-6">
-                3
-              </div>
-              <h3 className="text-xl font-bold text-slate-800 mb-3">
-                Terima Analisis
-              </h3>
-              <p className="text-slate-500">
-                AI akan memvalidasi apakah rincian Anda aman secara medis hanya
-                dalam hitungan detik.
-              </p>
-            </div>
+            <Card className="rounded-2xl shadow-sm border border-slate-100 text-center relative overflow-hidden">
+              <CardContent className="p-8">
+                <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-6">
+                  3
+                </div>
+                <h3 className="text-xl font-bold text-slate-800 mb-3">
+                  Terima Analisis
+                </h3>
+                <p className="text-slate-500">
+                  AI akan memvalidasi apakah rincian Anda aman secara medis
+                  hanya dalam hitungan detik.
+                </p>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Interactive Consultant Module */}

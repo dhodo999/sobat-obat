@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import LogoSVG from "@/assets/images/SobatObat_full.svg";
+import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const [isScrolled, SetIsScrolled] = useState(false);
@@ -80,12 +81,12 @@ const Navbar = () => {
                 ></path>
               </svg>
             </div>
-            <Link
-              to="/login"
-              className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm shadow-blue-600/20"
+            <Button
+              asChild
+              className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-600/20 rounded-lg"
             >
-              Masuk
-            </Link>
+              <Link to="/login">Masuk</Link>
+            </Button>
             <div className="md:hidden flex items-center">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

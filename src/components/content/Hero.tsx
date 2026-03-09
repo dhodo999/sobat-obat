@@ -1,5 +1,6 @@
 import AssetSVG from "@/assets/images/asset1.svg";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 const Hero = () => {
   return (
@@ -32,11 +33,18 @@ const Hero = () => {
 
               {/* Call To Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="inline-flex justify-center items-center px-6 py-3.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/30">
+                <Button
+                  size="lg"
+                  className="px-8 bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-lg shadow-blue-600/30 text-base h-12 rounded-lg"
+                >
                   Mulai Pencarian
-                </button>
+                </Button>
 
-                <button className="inline-flex justify-center items-center px-6 py-3.5 rounded-lg bg-white text-slate-700 font-medium hover:bg-slate-50 border border-slate-200 transition-colors">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="px-8 text-slate-700 font-medium hover:bg-slate-50 border-slate-200 text-base h-12 rounded-lg"
+                >
                   Pelajari Fitur
                   <svg
                     className="ml-2 w-4 h-4"
@@ -51,7 +59,7 @@ const Hero = () => {
                       d="M9 5l7 7-7 7"
                     />
                   </svg>
-                </button>
+                </Button>
               </div>
 
               <div className="mt-10 pt-10 border-t border-slate-200/60 flex items-center gap-6">
