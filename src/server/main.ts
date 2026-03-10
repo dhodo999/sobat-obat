@@ -2,10 +2,12 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { Obat } from "./models/obat";
+import authRoutes from "./auth/auth";
 
 dotenv.config();
 const app = express();
 app.use(express.json());
+app.use("/api/auth", authRoutes);
 
 mongoose
   .connect(process.env.MONGODB_URI!)

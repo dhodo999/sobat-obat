@@ -150,3 +150,44 @@
 .auth-container.active .toggle-right {
   transform: translateX(200%);
 }
+
+/* --- Mobile Responsive Overrides --- */
+@media (max-width: 768px) {
+  /* Hide the sliding decorative panel entirely */
+  .toggle-container {
+    display: none;
+  }
+
+  /* Make forms take full width, no sliding off-screen horizontally */
+  .sign-in,
+  .sign-up {
+    width: 100%;
+    left: 0;
+    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+  }
+
+  /* Default state (Sign In mode) */
+  .sign-in {
+    transform: translateY(0);
+    opacity: 1;
+    z-index: 5;
+  }
+  .sign-up {
+    transform: translateY(100%);
+    opacity: 0;
+    z-index: 1;
+  }
+
+  /* Active state (Sign Up mode) */
+  .auth-container.active .sign-in {
+    transform: translateY(-100%);
+    opacity: 0;
+    z-index: 1;
+  }
+  .auth-container.active .sign-up {
+    transform: translateY(0);
+    opacity: 1;
+    z-index: 5;
+    animation: none; /* Disable desktop sliding animation */
+  }
+}

@@ -53,6 +53,14 @@ const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const location = useLocation();
 
+  // Form States
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     // Determine the initial state based on the route
     if (location.pathname === "/register") {
@@ -62,9 +70,71 @@ const Auth = () => {
     }
   }, [location.pathname]);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
-    // Add authentication logic here
+    setLoading(true);
+    setError(null);
+
+    if (password !== confirmPassword) {
+      setError("Password tidak sama!");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message);
+        // Switch to login view after successful registration
+        setIsSignUp(false);
+        setPassword(""); // clear password for safety
+        setConfirmPassword("");
+      } else {
+        setError(data.error);
+      }
+    } catch (err) {
+      setError("Gagal terhubung ke server");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogin = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Save the JWT token
+        localStorage.setItem("token", data.token);
+        // Save basic user info if needed
+        localStorage.setItem("user", JSON.stringify(data.user));
+        alert("Berhasil masuk!");
+        window.location.href = "/"; // redirect to home
+      } else {
+        setError(data.error);
+      }
+    } catch (err) {
+      setError("Gagal terhubung ke server");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -72,10 +142,11 @@ const Auth = () => {
       <div className={`auth-container ${isSignUp ? "active" : ""}`}>
         <Link
           to="/"
-          className="absolute top-6 left-6 md:top-8 md:left-8 text-slate-700 hover:text-blue-600 font-bold transition flex items-center gap-2 bg-white px-5 py-2.5 rounded-full shadow-lg ring-1 ring-slate-200 z-50 hover:shadow-xl hover:-translate-y-0.5"
+          className="absolute top-4 left-4 md:top-8 md:left-8 text-slate-700 hover:text-blue-600 font-bold transition flex items-center justify-center gap-2 bg-white w-12 h-12 md:w-auto md:h-auto md:px-5 md:py-2.5 rounded-full shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] ring-1 ring-slate-100 z-50 hover:shadow-xl hover:-translate-y-0.5"
+          aria-label="Kembali ke Beranda"
         >
           <svg
-            className="w-4 h-4"
+            className="w-5 h-5 md:w-4 md:h-4 stroke-2"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -83,23 +154,57 @@ const Auth = () => {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth="2"
               d="M10 19l-7-7m0 0l7-7m-7 7h18"
             />
           </svg>
-          Kembali ke Beranda
+          <span className="hidden md:inline">Kembali ke Beranda</span>
         </Link>
 
         {/* Sign Up Panel */}
         <div className="form-container sign-up">
           <form
-            onSubmit={handleSubmit}
-            className="px-8 sm:px-16 md:px-24 h-full flex flex-col justify-center items-center text-center bg-white"
+            onSubmit={handleRegister}
+            className="px-8 sm:px-16 md:px-24 h-full flex flex-col justify-start md:justify-center items-center text-center bg-white pt-24 pb-8 md:pt-0 overflow-y-auto"
           >
             <h1 className="text-4xl lg:text-5xl font-black mb-6 text-slate-800 tracking-tight">
               Buat Akun
             </h1>
-            <div className="social-icons flex gap-4 mb-6">
+            <Input
+              type="text"
+              placeholder="Nama Lengkap"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 mb-4 py-8 px-6 text-lg rounded-2xl focus-visible:ring-2 focus-visible:ring-blue-500 transition-all font-medium"
+              required
+            />
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 mb-4 py-8 px-6 text-lg rounded-2xl focus-visible:ring-2 focus-visible:ring-blue-500 transition-all font-medium"
+              required
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 mb-4 py-8 px-6 text-lg rounded-2xl focus-visible:ring-2 focus-visible:ring-blue-500 transition-all font-medium"
+              required
+            />
+            <Input
+              type="password"
+              placeholder="Konfirmasi Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 mb-2 py-8 px-6 text-lg rounded-2xl focus-visible:ring-2 focus-visible:ring-blue-500 transition-all font-medium"
+              required
+            />
+            <span className="text-sm text-slate-500 mt-2 mb-3 block font-medium">
+              atau daftar menggunakan
+            </span>
+            <div className="social-icons flex gap-4 mb-2 !mt-2">
               <a
                 href="#"
                 className="w-12 h-12 border border-slate-200 rounded-xl flex items-center justify-center hover:bg-slate-50 hover:text-blue-600 transition-colors text-slate-600"
@@ -125,45 +230,59 @@ const Auth = () => {
                 <LinkedinIcon />
               </a>
             </div>
-            <span className="text-base text-slate-500 mb-6 block font-medium">
-              atau gunakan email untuk registrasi
-            </span>
+            {error && isSignUp && (
+              <span className="text-sm text-red-500 mb-4 block font-bold bg-red-50 py-2 px-4 rounded-lg w-full">
+                {error}
+              </span>
+            )}
 
-            <Input
-              type="text"
-              placeholder="Nama Lengkap"
-              className="w-full bg-slate-50 border border-slate-200 mb-4 py-8 px-6 text-lg rounded-2xl focus-visible:ring-2 focus-visible:ring-blue-500 transition-all font-medium"
-              required
-            />
-            <Input
-              type="email"
-              placeholder="Email"
-              className="w-full bg-slate-50 border border-slate-200 mb-4 py-8 px-6 text-lg rounded-2xl focus-visible:ring-2 focus-visible:ring-blue-500 transition-all font-medium"
-              required
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              className="w-full bg-slate-50 border border-slate-200 mb-6 py-8 px-6 text-lg rounded-2xl focus-visible:ring-2 focus-visible:ring-blue-500 transition-all font-medium"
-              required
-            />
-
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold tracking-widest uppercase px-16 py-8 h-auto text-lg rounded-2xl shadow-xl shadow-blue-600/30 hover:shadow-blue-600/40 hover:-translate-y-0.5 transition-all w-full md:w-auto">
-              Daftar
+            <Button
+              disabled={loading}
+              className="bg-blue-600 hover:bg-blue-700 disabled:opacity-70 text-white font-bold tracking-widest uppercase px-16 py-8 h-auto text-lg rounded-2xl shadow-xl shadow-blue-600/30 hover:shadow-blue-600/40 hover:-translate-y-0.5 transition-all w-full md:w-auto"
+            >
+              {loading ? "Memproses..." : "Daftar"}
             </Button>
+
+            <button
+              type="button"
+              onClick={() => setIsSignUp(false)}
+              className="md:hidden mt-6 text-base text-slate-600 font-medium hover:text-blue-600 transition-colors"
+            >
+              Sudah punya akun?{" "}
+              <span className="text-blue-600 font-bold underline">Masuk</span>
+            </button>
           </form>
         </div>
 
         {/* Sign In Panel */}
         <div className="form-container sign-in">
           <form
-            onSubmit={handleSubmit}
-            className="px-8 sm:px-16 md:px-24 h-full flex flex-col justify-center items-center text-center bg-white"
+            onSubmit={handleLogin}
+            className="px-8 sm:px-16 md:px-24 h-full flex flex-col justify-start md:justify-center items-center text-center bg-white pt-24 pb-8 md:pt-0 overflow-y-auto"
           >
             <h1 className="text-4xl lg:text-5xl font-black mb-6 text-slate-800 tracking-tight">
               Masuk
             </h1>
-            <div className="social-icons flex gap-4 mb-6">
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 mb-4 py-8 px-6 text-lg rounded-2xl focus-visible:ring-2 focus-visible:ring-blue-500 transition-all font-medium"
+              required
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 mb-2 py-8 px-6 text-lg rounded-2xl focus-visible:ring-2 focus-visible:ring-blue-500 transition-all font-medium"
+              required
+            />
+            <span className="text-sm text-slate-500 mt-2 mb-3 block font-medium">
+              atau masuk menggunakan
+            </span>
+            <div className="social-icons flex gap-4 mb-2 !mt-2">
               <a
                 href="#"
                 className="w-12 h-12 border border-slate-200 rounded-xl flex items-center justify-center hover:bg-slate-50 hover:text-blue-600 transition-colors text-slate-600"
@@ -189,22 +308,11 @@ const Auth = () => {
                 <LinkedinIcon />
               </a>
             </div>
-            <span className="text-base text-slate-500 mb-6 block font-medium">
-              atau gunakan email dan password anda
-            </span>
-
-            <Input
-              type="email"
-              placeholder="Email"
-              className="w-full bg-slate-50 border border-slate-200 mb-4 py-8 px-6 text-lg rounded-2xl focus-visible:ring-2 focus-visible:ring-blue-500 transition-all font-medium"
-              required
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              className="w-full bg-slate-50 border border-slate-200 mb-2 py-8 px-6 text-lg rounded-2xl focus-visible:ring-2 focus-visible:ring-blue-500 transition-all font-medium"
-              required
-            />
+            {error && !isSignUp && (
+              <span className="text-sm text-red-500 mb-4 block font-bold bg-red-50 py-2 px-4 rounded-lg w-full">
+                {error}
+              </span>
+            )}
 
             <a
               href="#"
@@ -213,9 +321,21 @@ const Auth = () => {
               Lupa Password Anda?
             </a>
 
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold tracking-widest uppercase px-16 py-8 h-auto text-lg rounded-2xl shadow-xl shadow-blue-600/30 hover:shadow-blue-600/40 hover:-translate-y-0.5 transition-all w-full md:w-auto">
-              Masuk
+            <Button
+              disabled={loading}
+              className="bg-blue-600 hover:bg-blue-700 disabled:opacity-70 text-white font-bold tracking-widest uppercase px-16 py-8 h-auto text-lg rounded-2xl shadow-xl shadow-blue-600/30 hover:shadow-blue-600/40 hover:-translate-y-0.5 transition-all w-full md:w-auto"
+            >
+              {loading ? "Memproses..." : "Masuk"}
             </Button>
+
+            <button
+              type="button"
+              onClick={() => setIsSignUp(true)}
+              className="md:hidden mt-6 text-base text-slate-600 font-medium hover:text-blue-600 transition-colors"
+            >
+              Belum punya akun?{" "}
+              <span className="text-blue-600 font-bold underline">Daftar</span>
+            </button>
           </form>
         </div>
 
