@@ -1,13 +1,12 @@
 import Groq from "groq-sdk";
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
-});
-
 export async function analyzeDrugInteraction(
-  medications: string[], 
-  lifestyleContext: string
+  medications: string[],
+  lifestyleContext: string,
 ) {
+  const groq = new Groq({
+    apiKey: process.env.GROQ_API_KEY,
+  });
   // 1. Konteks Referensi Medis (Pharmacokinetics & Pharmacodynamics)
   const contextFarmakologi = `
   PENGETAHUAN FARMAKOLOGI (REFERENSI UTAMA):
@@ -57,11 +56,10 @@ CONTOH FORMAT OUTPUT JSON YANG WAJIB DIIKUTI PERSIS STRUKTURNYA:
         { role: "system", content: systemPrompt },
         {
           role: "user",
-          content: `Tolong analisis interaksi ini:\n\nDaftar Obat: ${medications.join(", ")}\nKonteks/Gaya Hidup: "${lifestyleContext || 'Tidak ada info tambahan'}"`,
+          content: `Tolong analisis interaksi ini:\n\nDaftar Obat: ${medications.join(", ")}\nKonteks/Gaya Hidup: "${lifestyleContext || "Tidak ada info tambahan"}"`,
         },
       ],
-      // Qwen 2.5 sangat bagus untuk penalaran dan instruksi JSON terstruktur
-      model: "qwen-2.5-32b", 
+      model: "qwen/qwen3-32b",
       temperature: 0.2, // Sedikit dinaikkan dari 0.1 agar bahasanya lebih luwes saat menjelaskan
       response_format: { type: "json_object" },
     });
@@ -70,5 +68,31 @@ CONTOH FORMAT OUTPUT JSON YANG WAJIB DIIKUTI PERSIS STRUKTURNYA:
   } catch (error) {
     console.error("Gagal memproses LLM:", error);
     throw new Error("Gagal mengambil keputusan klinis AI");
+  }
+}
+
+export async function extractDrugNameFromOCR(ocrText: string): Promise<string> {
+  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  
+  const systemPrompt = `Anda adalah asisten farmasi pendeteksi nama obat. 
+Tugas Anda: Carilah SATU NAMA OBAT UTAMA TERPENTING (Merek atau Generik) dari teks acak hasil scan kemasan ini. 
+ATURAN MUTLAK:
+- Kembalikan HANYA namanya saja (misalnya "Paracetamol" atau "Zyloric").
+- JANGAN tambahkan kalimat "Ini obatnya...", "Nama obat adalah...", atau tanda kutip.`;
+  
+  try {
+    const completion = await groq.chat.completions.create({
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: `Teks kemasan kotor:\n${ocrText}` },
+      ],
+      model: "qwen/qwen3-32b",
+      temperature: 0.1, // Harus rendah agar sangat persis dan tidak ngelantur
+    });
+    
+    return completion.choices[0]?.message?.content?.trim() || "";
+  } catch (error) {
+    console.error("Gagal membersihkan OCR dengan AI:", error);
+    return "";
   }
 }

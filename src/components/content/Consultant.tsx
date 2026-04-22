@@ -25,16 +25,53 @@ const Consultant = () => {
     setSelectedMeds(selectedMeds.filter((m) => m._id !== medId));
   };
 
-  const handleAnalyze = () => {
-    if (selectedMeds.length === 0) return;
+  const handleAnalyze = async () => {
+    // Pastikan ada obat yang dipilih atau gambar yang disekstrak
+    if (selectedMeds.length === 0 && !capturedImage) return;
+
     setIsAnalyzing(true);
     setAiResult(null);
-    setTimeout(() => {
+    try {
+      // 1. Ambil Token JWT dari localStorage (untuk deteksi GUEST / FREE / PREMIUM)
+      const token = localStorage.getItem("token");
+      // 2. Siapkan Data
+      const payload = {
+        image: capturedImage,
+        medications: selectedMeds.map((m) => m.nama_obat),
+        lifestyleContext: lifestyleContext,
+      };
+      // 3. Tembak API Backend
+      const response = await fetch("/api/scan-ocr", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Jika token ada, selipkan ke Header Authorization
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      // 4. Tangani Error (Termasuk Error 429 Rate Limit 3x dari GUEST!)
+      if (!response.ok) {
+        setAiResult(
+          `⚠️ PERHATIAN: ${data.error || "Gagal menghubungi server"}`,
+        );
+        return;
+      }
+      // 5. Format hasil JSON dari Groq AI menjadi teks yang rapi
+      if (data.result && data.result.status_risiko) {
+        const formattedResult = `🚨 STATUS: ${data.result.status_risiko}\n\n📖 PENJELASAN:\n${data.result.penjelasan_medis}\n\n💡 SARAN:\n- ${data.result.saran_tindakan.join("\n- ")}`;
+        setAiResult(formattedResult);
+      } else {
+        // Fallback jika respons bukan JSON
+        setAiResult(data.peringatan || JSON.stringify(data.result));
+      }
+    } catch (error) {
+      console.error(error);
+      setAiResult("⚠️ Terjadi kesalahan jaringan saat mengontak sistem AI.");
+    } finally {
       setIsAnalyzing(false);
-      setAiResult(
-        "Berdasarkan analisis AI: Tidak ada interaksi mayor yang ditemukan antara paracetamol dan rutinitas minum kopi Anda. Namun, disarankan untuk memberi jeda 1-2 jam antara minum obat dan konsumsi kafein untuk mencegah iritasi lambung ringan.",
-      );
-    }, 2000);
+    }
   };
 
   return (
@@ -161,7 +198,11 @@ const Consultant = () => {
                         >
                           Ulangi
                         </Button>
-                        <Button className="flex-1 py-6 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-sm">
+                        <Button
+                          onClick={handleAnalyze}
+                          disabled={isAnalyzing}
+                          className="flex-1 py-6 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-sm"
+                        >
                           <svg
                             className="w-5 h-5 mr-2"
                             fill="none"
@@ -227,7 +268,9 @@ const Consultant = () => {
             <Button
               size="lg"
               onClick={handleAnalyze}
-              disabled={selectedMeds.length === 0 || isAnalyzing}
+              disabled={
+                (selectedMeds.length === 0 && !capturedImage) || isAnalyzing
+              }
               className="w-full shrink-0 bg-blue-500 hover:bg-blue-400 text-white font-bold py-6 rounded-xl shadow-lg shadow-blue-500/30 transition-all disabled:opacity-50 text-base"
             >
               {isAnalyzing ? (
@@ -278,7 +321,7 @@ const Consultant = () => {
                     </svg>
                     Hasil Analisis Aman
                   </div>
-                  <p className="text-base text-blue-50 leading-relaxed font-light">
+                  <p className="text-base text-blue-50 leading-relaxed font-light whitespace-pre-wrap">
                     {aiResult}
                   </p>
                 </div>
