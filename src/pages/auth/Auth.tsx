@@ -125,8 +125,7 @@ const Auth = () => {
         localStorage.setItem("token", data.token);
         // Save basic user info if needed
         localStorage.setItem("user", JSON.stringify(data.user));
-        alert("Berhasil masuk!");
-        window.location.href = "/"; // redirect to home
+        window.location.href = "/dashboard"; // redirect to dashboard
       } else {
         setError(data.error);
       }
@@ -356,7 +355,7 @@ const Auth = () => {
                 onClick={() => setIsSignUp(false)}
                 className="text-white border-2 border-white hover:bg-white hover:text-blue-700 font-bold tracking-widest uppercase px-16 py-8 h-auto text-lg rounded-2xl bg-transparent transition-all shadow-xl hover:shadow-2xl hover:-translate-y-0.5"
               >
-                Sign In
+                Masuk
               </Button>
             </div>
             <div className="toggle-panel toggle-right px-8 sm:px-16 md:px-24 text-center text-white flex flex-col items-center justify-center">
@@ -373,7 +372,7 @@ const Auth = () => {
                 onClick={() => setIsSignUp(true)}
                 className="text-white border-2 border-white hover:bg-white hover:text-blue-700 font-bold tracking-widest uppercase px-16 py-8 h-auto text-lg rounded-2xl bg-transparent transition-all shadow-xl hover:shadow-2xl hover:-translate-y-0.5"
               >
-                Sign Up
+                Daftar
               </Button>
             </div>
           </div>
